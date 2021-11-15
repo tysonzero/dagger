@@ -1,0 +1,4 @@
+*.swp
+/dist-newstyle
+/result
+/static/script.js
