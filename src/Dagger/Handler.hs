@@ -1,0 +1,11 @@
+module Dagger.Handler (handler) where
+
+import Miso (Effect)
+
+import Dagger.Types
+
+handler :: Action -> State -> Effect Action State
+handler a s = case a of
+    Modify f -> pure $ f s
+
+    NoOp -> pure s

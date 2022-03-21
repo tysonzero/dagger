@@ -3,16 +3,20 @@ module Dagger.JS (main) where
 import Language.Javascript.JSaddle (JSM)
 import Miso
     ( App(App), LogLevel(..), defaultEvents, events, initialAction
-    , div_, logLevel, model, mountPoint, startApp, subs, update
+    , logLevel, model, mountPoint, startApp, subs, update
     )
 import qualified Miso
 
+import Dagger.Handler
+import Dagger.Types
+import Dagger.View
+
 main :: JSM ()
 main = startApp $ App
-    { model = ()
-    , update = \() () -> pure ()
-    , Miso.view = \() -> div_ [] ["Dagger"]
-    , initialAction = ()
+    { model = initial
+    , update = handler
+    , Miso.view = view
+    , initialAction = NoOp
     , events = defaultEvents
     , logLevel = Off
     , mountPoint = Nothing
