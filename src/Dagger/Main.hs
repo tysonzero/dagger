@@ -18,7 +18,10 @@ import Servant.HTML.Lucid (HTML)
 import qualified Dagger.JS as J
 
 main :: IO ()
-main = run 3758 =<< jsaddleOr defaultConnectionOptions J.main server
+main = do
+    app <- jsaddleOr defaultConnectionOptions J.main server
+    putStrLn "Running Dagger on localhost:3758"
+    run 3758 app
 
 server :: Application
 server = genericServe $ Api
