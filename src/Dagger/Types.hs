@@ -38,5 +38,37 @@ data Action
 
 initial :: State
 initial = State
-    { _sDag = Null
+    { _sDag = Map
+      [ ( "bar"
+        , List
+          [ Null
+          , Boolean True
+          , List
+            [ Null
+            , String "foo"
+            ]
+          , Integer 5
+          , List
+            [ String "bar"
+            , Bytes "\0\0"
+            , Integer 6
+            ]
+          ]
+        )
+      , ( "foo"
+        , List
+          [ Boolean False
+          , Float 13.5
+          , Null
+          , Map
+            [ ( "baz"
+              , Integer 2
+              )
+            , ( "qux"
+              , Boolean False
+              )
+            ]
+          ]
+        )
+      ]
     }
