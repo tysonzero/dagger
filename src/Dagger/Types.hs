@@ -4,6 +4,9 @@ module Dagger.Types
     ( State(..)
     , sDag
     , Node(..)
+    , nValue
+    , nSelected
+    , NodeValue(..)
     , Action(..)
     , initial
     ) where
@@ -18,7 +21,12 @@ newtype State = State
     { _sDag :: Node
     } deriving (Eq, Show)
 
-data Node
+data Node = Node
+    { _nValue :: NodeValue
+    , _nSelected :: Bool
+    } deriving (Eq, Show)
+
+data NodeValue
     = Null
     | Boolean Bool
     | Integer Integer
@@ -31,6 +39,13 @@ data Node
     deriving (Eq, Show)
 
 makeLenses ''State
+makeLenses ''Node
+
+mkNode :: NodeValue -> Node
+mkNode v = Node
+    { _nValue = v
+    , _nSelected = False
+    }
 
 data Action
     = Modify (State -> State)
@@ -38,34 +53,37 @@ data Action
 
 initial :: State
 initial = State
-    { _sDag = Map
+    { _sDag = mkNode $ Map
       [ ( "bar"
-        , List
-          [ Null
-          , Boolean True
-          , List
-            [ Null
-            , String "foo"
+        , Node
+          { _nValue = List
+            [ mkNode Null
+            , mkNode $ Boolean True
+            , mkNode $ List
+              [ mkNode Null
+              , mkNode $ String "foo"
+              ]
+            , mkNode $ Integer 5
+            , mkNode $ List
+              [ mkNode $ String "bar"
+              , mkNode $ Bytes "\0\0"
+              , mkNode $ Integer 6
+              ]
             ]
-          , Integer 5
-          , List
-            [ String "bar"
-            , Bytes "\0\0"
-            , Integer 6
-            ]
-          ]
+          , _nSelected = True
+          }
         )
       , ( "foo"
-        , List
-          [ Boolean False
-          , Float 13.5
-          , Null
-          , Map
+        , mkNode $ List
+          [ mkNode $ Boolean False
+          , mkNode $ Float 13.5
+          , mkNode Null
+          , mkNode $ Map
             [ ( "baz"
-              , Integer 2
+              , mkNode $ Integer 2
               )
             , ( "qux"
-              , Boolean False
+              , mkNode $ Boolean False
               )
             ]
           ]
